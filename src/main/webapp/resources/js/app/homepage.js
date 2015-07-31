@@ -17,10 +17,10 @@ app.controller('homecontroller', function($scope,$http) {
     	     });
     	     responsePromise.success(function(data){
     	        // With the data succesfully returned, call our callback
-    	        alert(data);
+    	        var response = data;
     	    });
     	    responsePromise.error(function(data,status,headers,config){
-    	    	alert(status);
+    	    	//alert(status);
     	        alert("Exception returned from Server. Please try later.");
     	    });
     	};
