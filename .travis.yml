@@ -10,4 +10,4 @@ deploy:
   organization: TOPGUNS
   space: development
   on:
-    tags: true
+    all_branches: true
