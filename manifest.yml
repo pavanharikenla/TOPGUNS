@@ -1,0 +1,6 @@
+applications:
+  name: topguns
+  instances: 1
+  path: ./target/
+
+  
