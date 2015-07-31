@@ -1,5 +1,6 @@
 language: java
 install: mvn -X clean install
+sudo: true
 deploy:
   provider: cloudfoundry 
   api: https://api.run.pivotal.io
