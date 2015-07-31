@@ -1,0 +1,332 @@
+package com.verizon.voc;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.impl.HttpSolrServer;
+import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.common.SolrDocumentList;
+import org.apache.solr.common.SolrInputDocument;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import com.verizon.common.ISO8601DateParser;
+import com.verizon.common.TweetIdExtractor;
+
+
+public class GnipToSolr {
+	public static String line;
+	public static final String url = "http://rtmsacovn02.ebiz.verizon.com:8983/solr/Core_SolrPOC";
+    public static SolrServer server ;
+
+	public static void indexJsonTweets() throws FileNotFoundException,
+			IOException, SolrServerException {
+
+		String smallFile = "gnip_twitter.json";
+		String largeFileName = "C:\\Ravi\\Project Data\\SharePoint_Data\\Shared Documents\\VOC Big Data\\Sample Data\\GNIP_twitterDumponFile\\GNIP_twitterDumponFile.json";
+		
+		try (InputStream fis = new FileInputStream(largeFileName);
+				InputStreamReader isr = new InputStreamReader(fis,
+						Charset.forName("UTF-8"));
+				BufferedReader br = new BufferedReader(isr);) {
+			
+			int counter = 0;
+
+			SolrServer server = new HttpSolrServer(url);
+			System.out.println("Solr Server URL: "+server);
+			
+			while ((line = br.readLine()) != null) {
+				
+				if (line.length() > 0) {
+					//System.out.println("line " + line);
+					counter++;
+					System.out.println("counter " + counter);
+					
+					/*if (counter <= 80) {
+						tag = Constants_POC.TAG_1;
+						label = Constants_POC.LABEL_NEUTRAL;
+					} else if (counter > 80 && counter <= 160) {
+						tag = Constants_POC.TAG_1;
+						label = Constants_POC.LABEL_NEGATIVE;
+					} else if (counter > 160 && counter <= 220) {
+						tag = Constants_POC.TAG_1;
+						label = Constants_POC.LABEL_POSITIVE;
+					} 
+					
+					else if (counter > 220 && counter <= 300) {
+						tag = Constants_POC.TAG_2;
+						label = Constants_POC.LABEL_NEUTRAL;
+					} else if (counter > 300 && counter <= 395) {
+						tag = Constants_POC.TAG_2;
+						label = Constants_POC.LABEL_NEGATIVE;
+					} else if (counter > 395 && counter <= 450) {
+						tag = Constants_POC.TAG_2;
+						label = Constants_POC.LABEL_POSITIVE;
+					} 
+					
+					else if (counter > 450 && counter <= 500) {
+						tag = Constants_POC.TAG_3;
+						label = Constants_POC.LABEL_NEUTRAL;
+					} else if (counter > 500 && counter <= 560) {
+						tag = Constants_POC.TAG_3;
+						label = Constants_POC.LABEL_NEGATIVE;
+					} else if (counter > 560 && counter <= 600) {
+						tag = Constants_POC.TAG_3;
+						label = Constants_POC.LABEL_POSITIVE;
+					} 
+					
+					else if (counter > 600 && counter <= 750) {
+						tag = Constants_POC.TAG_4;
+						label = Constants_POC.LABEL_NEUTRAL;
+					} else if (counter > 750 && counter <= 825) {
+						tag = Constants_POC.TAG_4;
+						label = Constants_POC.LABEL_NEGATIVE;
+					} else if (counter > 825) {
+						tag = Constants_POC.TAG_4;
+						label = Constants_POC.LABEL_POSITIVE;
+					} */
+					try {
+						
+						ImportantFields p = (ImportantFields) new Gson().fromJson(line, ImportantFields.class);
+						Long tweetId = TweetIdExtractor.extractTweetId(p.id);
+						
+						
+						String tweetPostedTime = p.postedTime;
+						Integer kloutScore = p.getGnip().getKlout_score();
+						
+						String rowKey = consructKey(tweetId, tweetPostedTime);
+						
+						
+						
+						SolrInputDocument tweet = new SolrInputDocument();
+						//String id_d = "" + counter;
+						
+						tweet.addField("index_id", counter);
+						
+						tweet.addField("id", rowKey);
+						tweet.addField("body", p.body);
+						tweet.addField("gnip_klout_score", kloutScore);
+						
+						
+	/*					tweet.addField("wireless_service_provider",tag);
+						tweet.addField("sentiment_type",label);*/
+
+						server.add(tweet);
+						server.commit();
+						System.out.println("adding is done");
+					} catch (JsonSyntaxException e) {
+						System.out.println(e);
+
+					}
+				}
+			}
+		}
+			
+
+	}
+
+	public static void query_data() throws SolrServerException {
+
+		server = new HttpSolrServer(url);
+		SolrQuery query = new SolrQuery();
+		query.setQuery("*:*");
+		
+		query.addFilterQuery("body:*sprint*");
+		//query.addFilterQuery("body:sprint");
+		//query.setFields("id", "wireless_service_provider", "body");
+		//query.set("dataType", "text_general");
+		
+		query.setStart(0);
+		query.setRows(1000);
+		
+		QueryResponse response = server.query(query);
+		SolrDocumentList results = response.getResults();
+		System.out.println("Total num found " + results.getNumFound());
+		System.out.println("size of the result is " + results.size());
+		
+		for (int i = 0; i < results.size(); i++) {
+			System.out.println(results.get(i));
+			
+		}
+		
+	}
+
+	public static void deleteAllIndexData() throws SolrServerException,
+			IOException {
+
+		SolrServer server = new HttpSolrServer(url);
+		server.deleteByQuery("*:*");//
+		System.out.println("all the data are deleted");
+	}
+
+	public static void main(String[] args) throws FileNotFoundException,
+			IOException, SolrServerException {
+		
+		//indexJsonTweets();
+		//deleteAllIndexData();
+		query_data();
+
+	}
+	
+private static String consructKey(Long tweetId, String tweetPostedTime) {
+		
+		/**
+		 * Row Key = yyyy-MM-dd-Tweet_Id
+		 */
+		/*String rowKey = id + "_" + rand;
+		return rowKey;*/
+		
+		Date tweetedTime;
+		String tweetedTimeString = null;
+		
+		try {
+			tweetedTime = ISO8601DateParser.parse(tweetPostedTime);
+			SimpleDateFormat dmyFormat = new SimpleDateFormat("yyyy-MM-dd");
+			tweetedTimeString = dmyFormat.format(tweetedTime);
+			
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		String tweetRowKey = tweetedTimeString+"-"+tweetId.toString();
+		
+		return tweetRowKey;
+	}
+
+}
+
+
+-------------
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.verizon.voc</groupId>
+  <artifactId>com.verizon.voc</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>SolrPoC</name>
+  <description>SolrPoC</description>
+  
+  <dependencies>
+		<dependency>
+			<artifactId>solr-solrj</artifactId>
+			<groupId>org.apache.solr</groupId>
+			<version>4.9.0</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<artifactId>solr-core</artifactId>
+			<groupId>org.apache.solr</groupId>
+			<version>1.4.0</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.7.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.3</version>
+			<scope>compile</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>15.0</version>
+		</dependency>
+		
+	</dependencies>
+	<build>
+	<plugins>
+	<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.4.1</version>
+				<configuration>
+					<!-- get all project dependencies -->
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<!-- MainClass in mainfest make a executable jar -->
+					<!-- <archive>
+					  <manifest>
+						<mainClass>com.mkyong.core.utils.App</mainClass>
+					  </manifest>
+					</archive> -->
+ 
+				</configuration>
+				<executions>
+				  <execution>
+					<id>make-assembly</id>
+                                        <!-- bind to the packaging phase -->
+					<phase>package</phase> 
+					<goals>
+						<goal>single</goal>
+					</goals>
+				  </execution>
+				</executions>
+			</plugin>
+			
+			<plugin>
+			  <groupId>org.apache.maven.plugins</groupId>
+			  <artifactId>maven-compiler-plugin</artifactId>
+			  <configuration>
+			    <source>1.7</source>
+			    <target>1.7</target>
+			  </configuration>
+			</plugin>
+		
+	</plugins>
+	</build>
+</project>
+
+
+--
+
+package com.verizon.voc;
+
+
+public class ImportantFields implements java.io.Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7612780773183083396L;
+	public String id ;
+	public String postedTime;
+    public String body ;
+    private Gnip gnip = new Gnip();
+	public Gnip getGnip() {
+		return gnip;
+	}
+	public void setGnip(Gnip gnip) {
+		this.gnip = gnip;
+	}
+ 
+    
+
+}
