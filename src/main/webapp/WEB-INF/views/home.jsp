@@ -24,6 +24,7 @@
 
     <!-- Custom Fonts -->
     <link href="<%= request.getContextPath() %>/resources/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <script src="<%= request.getContextPath() %>/resources/js/angular/angular.min.js"></script>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -31,12 +32,14 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-
+	<script type="text/javascript">
+	var contextpath = "<%= request.getContextPath() %>";
+	</script>
 </head>
 
 <body>
 
-    <div id="wrapper">
+    <div id="wrapper" ng-app="topguns">
 
         <!-- Navigation -->
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -233,7 +236,7 @@
                 </div> -->
                 <!-- /.row -->
 
-                <div class="row">
+                <div class="row" ng-controller = "homecontroller">
                     <div class="col-lg-3 col-md-6">
                         <div class="panel panel-primary">
                             <div class="panel-heading">
@@ -242,12 +245,12 @@
                                         <i class="fa fa-comments fa-5x"></i>
                                     </div>
                                     <div class="col-xs-9 text-right">
-                                        <div class="huge">26</div>
-                                        <div>Tweet Count!</div>
+                                        <div class="huge">${model.resultCount}</div>
+                                        <div>Tweet Count</div>
                                     </div>
                                 </div>
                             </div>
-                            <a href="#">
+                            <a href="#" ng-click="data.doClick(item,$event)">
                                 <div class="panel-footer">
                                     <span class="pull-left">View Details</span>
                                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -264,8 +267,8 @@
                                         <i class="fa fa-tasks fa-5x"></i>
                                     </div>
                                     <div class="col-xs-9 text-right">
-                                        <div class="huge">12</div>
-                                        <div>New Tasks!</div>
+                                        <div class="huge">${model.positiveCount}</div>
+                                        <div>Positive Count</div>
                                     </div>
                                 </div>
                             </div>
@@ -283,11 +286,11 @@
                             <div class="panel-heading">
                                 <div class="row">
                                     <div class="col-xs-3">
-                                        <i class="fa fa-shopping-cart fa-5x"></i>
+                                        <i class="fa fa-tasks fa-5x"></i>
                                     </div>
                                     <div class="col-xs-9 text-right">
-                                        <div class="huge">124</div>
-                                        <div>New Orders!</div>
+                                        <div class="huge">${model.neutralCount}</div>
+                                        <div>Neutral Count</div>
                                     </div>
                                 </div>
                             </div>
@@ -308,8 +311,8 @@
                                         <i class="fa fa-support fa-5x"></i>
                                     </div>
                                     <div class="col-xs-9 text-right">
-                                        <div class="huge">13</div>
-                                        <div>Support Tickets!</div>
+                                        <div class="huge">${model.negativeCount}</div>
+                                        <div>Negative Count</div>
                                     </div>
                                 </div>
                             </div>
@@ -353,6 +356,7 @@
                             </div>
                         </div>
                     </div>
+                    <!-- 
                     <div class="col-lg-4">
                         <div class="panel panel-default">
                             <div class="panel-heading">
@@ -398,71 +402,23 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-4">
+                    </div> -->
+                    <div class="col-lg-8">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-money fa-fw"></i> Transactions Panel</h3>
+                                <h3 class="panel-title"><i class="fa fa-money fa-fw"></i> Tweet List</h3>
                             </div>
                             <div class="panel-body">
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-hover table-striped">
                                         <thead>
                                             <tr>
-                                                <th>Order #</th>
-                                                <th>Order Date</th>
-                                                <th>Order Time</th>
-                                                <th>Amount (USD)</th>
+                                                <th>Tweets</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
                                                 <td>3326</td>
-                                                <td>10/21/2013</td>
-                                                <td>3:29 PM</td>
-                                                <td>$321.33</td>
-                                            </tr>
-                                            <tr>
-                                                <td>3325</td>
-                                                <td>10/21/2013</td>
-                                                <td>3:20 PM</td>
-                                                <td>$234.34</td>
-                                            </tr>
-                                            <tr>
-                                                <td>3324</td>
-                                                <td>10/21/2013</td>
-                                                <td>3:03 PM</td>
-                                                <td>$724.17</td>
-                                            </tr>
-                                            <tr>
-                                                <td>3323</td>
-                                                <td>10/21/2013</td>
-                                                <td>3:00 PM</td>
-                                                <td>$23.71</td>
-                                            </tr>
-                                            <tr>
-                                                <td>3322</td>
-                                                <td>10/21/2013</td>
-                                                <td>2:49 PM</td>
-                                                <td>$8345.23</td>
-                                            </tr>
-                                            <tr>
-                                                <td>3321</td>
-                                                <td>10/21/2013</td>
-                                                <td>2:23 PM</td>
-                                                <td>$245.12</td>
-                                            </tr>
-                                            <tr>
-                                                <td>3320</td>
-                                                <td>10/21/2013</td>
-                                                <td>2:15 PM</td>
-                                                <td>$5663.54</td>
-                                            </tr>
-                                            <tr>
-                                                <td>3319</td>
-                                                <td>10/21/2013</td>
-                                                <td>2:13 PM</td>
-                                                <td>$943.45</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -495,6 +451,7 @@
     <script src="<%= request.getContextPath() %>/resources/js/plugins/morris/raphael.min.js"></script>
     <script src="<%= request.getContextPath() %>/resources/js/plugins/morris/morris.min.js"></script>
     <script src="<%= request.getContextPath() %>/resources/js/plugins/morris/morris-data.js"></script>
+    <script src="<%= request.getContextPath() %>/resources/js/app/homepage.js"></script>
 
 </body>
 
