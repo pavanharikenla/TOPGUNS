@@ -50,7 +50,7 @@ public class HomeControllerTest extends TestCase {
 		assertNotNull("ModelAndView should not be null", result);
 		ModelAndViewAssert.assertViewName(result, "home");
 		ModelAndViewAssert.assertAndReturnModelAttributeOfType(result, "model", HomeBean.class);
-		assertEquals(1, model.size());
+		assertEquals(0, model.size());
 		//assertEquals("August 1, 2015 2:18:11 PM IST", model.get("serverTime"));
 	}
 
@@ -74,7 +74,7 @@ public class HomeControllerTest extends TestCase {
 		assertNotNull("ModelAndView should not be null", result);
 		ModelAndViewAssert.assertViewName(result, "home");
 		ModelAndViewAssert.assertAndReturnModelAttributeOfType(result, "model", HomeBean.class);
-		assertEquals(1, model.size());
+		assertEquals(0, model.size());
 		//assertEquals("August 1, 2015 2:18:12 PM IST", model.get("serverTime"));
 	}
 
@@ -98,7 +98,7 @@ public class HomeControllerTest extends TestCase {
 		assertNotNull("ModelAndView should not be null", result);
 		ModelAndViewAssert.assertViewName(result, "home");
 		ModelAndViewAssert.assertAndReturnModelAttributeOfType(result, "model", HomeBean.class);
-		assertEquals(1, model.size());
+		assertEquals(0, model.size());
 		//assertEquals("August 1, 2015 2:18:12 PM IST", model.get("serverTime"));
 	}
 
@@ -122,7 +122,7 @@ public class HomeControllerTest extends TestCase {
 		assertNotNull("ModelAndView should not be null", result);
 		ModelAndViewAssert.assertViewName(result, "home");
 		ModelAndViewAssert.assertAndReturnModelAttributeOfType(result, "model", HomeBean.class);
-		assertEquals(1, model.size());
+		assertEquals(0, model.size());
 		//assertEquals("August 1, 2015 2:18:14 PM IST", model.get("serverTime"));
 	}
 
@@ -146,7 +146,7 @@ public class HomeControllerTest extends TestCase {
 		assertNotNull("ModelAndView should not be null", result);
 		ModelAndViewAssert.assertViewName(result, "home");
 		ModelAndViewAssert.assertAndReturnModelAttributeOfType(result, "model", HomeBean.class);
-		assertEquals(1, model.size());
+		assertEquals(0, model.size());
 		//assertEquals("August 1, 2015 2:18:14 PM IST", model.get("serverTime"));
 	}
 
@@ -170,7 +170,7 @@ public class HomeControllerTest extends TestCase {
 		assertNotNull("ModelAndView should not be null", result);
 		ModelAndViewAssert.assertViewName(result, "home");
 		ModelAndViewAssert.assertAndReturnModelAttributeOfType(result, "model", HomeBean.class);
-		assertEquals(1, model.size());
+		assertEquals(0, model.size());
 		//assertEquals("August 1, 2015 2:18:15 PM IST", model.get("serverTime"));
 	}
 
@@ -194,7 +194,7 @@ public class HomeControllerTest extends TestCase {
 		assertNotNull("ModelAndView should not be null", result);
 		ModelAndViewAssert.assertViewName(result, "home");
 		ModelAndViewAssert.assertAndReturnModelAttributeOfType(result, "model", HomeBean.class);
-		assertEquals(1, model.size());
+		assertEquals(0, model.size());
 		//assertEquals("August 1, 2015 2:18:15 PM IST", model.get("serverTime"));
 	}
 
@@ -218,7 +218,7 @@ public class HomeControllerTest extends TestCase {
 		assertNotNull("ModelAndView should not be null", result);
 		ModelAndViewAssert.assertViewName(result, "home");
 		ModelAndViewAssert.assertAndReturnModelAttributeOfType(result, "model", HomeBean.class);
-		assertEquals(1, model.size());
+		assertEquals(0, model.size());
 		//assertEquals("August 1, 2015 2:18:15 PM IST", model.get("serverTime"));
 	}
 
@@ -242,7 +242,7 @@ public class HomeControllerTest extends TestCase {
 		assertNotNull("ModelAndView should not be null", result);
 		ModelAndViewAssert.assertViewName(result, "home");
 		ModelAndViewAssert.assertAndReturnModelAttributeOfType(result, "model", HomeBean.class);
-		assertEquals(1, model.size());
+		assertEquals(0, model.size());
 		//assertEquals("August 1, 2015 2:18:16 PM IST", model.get("serverTime"));
 	}
 
@@ -266,7 +266,7 @@ public class HomeControllerTest extends TestCase {
 		assertNotNull("ModelAndView should not be null", result);
 		ModelAndViewAssert.assertViewName(result, "home");
 		ModelAndViewAssert.assertAndReturnModelAttributeOfType(result, "model", HomeBean.class);
-		assertEquals(1, model.size());
+		assertEquals(0, model.size());
 		//assertEquals("August 1, 2015 2:18:16 PM IST", model.get("serverTime"));
 	}
 
