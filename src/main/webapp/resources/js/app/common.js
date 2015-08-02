@@ -2,13 +2,7 @@
  * Author: H Pavan Kumar
  */
 
-$.ajax({
-  type: "POST",
-  url: url,
-  data: data,
-  success: success,
-  dataType: dataType
-});
+
 
 function generateDonut(resObject){
 	var agelist = resObject.agegroup;
@@ -35,4 +29,81 @@ function generateAreaChart(resObject){
         parseTime: false,
         resize: true
     });
+}
+
+
+
+function generatePieChartProduct(responseObj){
+	var productData = responseObj.productList;
+	//alert(JSON.stringify(productData));
+	// Flot Pie Chart with Tooltips
+	
+
+	    var data = productData;
+	    //alert(data);
+	    var options = {
+	            series: {
+	                pie: {show: true}
+	            },grid: {
+		            hoverable: true
+		        },tooltip: true,
+		        tooltipOpts: {
+		            content: "%p.0%, %s", // show percentages, rounding to 2 decimal places
+		            shifts: {
+		                x: 20,
+		                y: 0
+		            },
+		            defaultTheme: false
+		        }
+	         };
+
+	    $.plot($("#flot-pie-chart-tg"), data, options);
+}
+function generatepieChartSmartPh(responseObj){
+	var productData = responseObj.phonesAndTablets;
+	//alert(JSON.stringify(productData));
+	// Flot Pie Chart with Tooltips
+	
+
+	    var data = productData;
+	    //alert(data);
+	    var options = {
+	            series: {
+	                pie: {show: true}
+	            },grid: {
+		            hoverable: true
+		        },tooltip: true,
+		        tooltipOpts: {
+		            content: "%p.0%, %s", // show percentages, rounding to 2 decimal places
+		            shifts: {
+		                x: 20,
+		                y: 0
+		            },
+		            defaultTheme: false
+		        }
+	         };
+
+	    $.plot($("#flot-pie-chart-tg-sm"), data, options);
+}
+
+function generateLineChart(responseObj){
+		//alert(responseObj);
+	var dataObj = responseObj.sentimentData;
+	//alert(JSON.stringify(dataObj));
+	Morris.Line({
+		  element: 'flot-line-chart-tg',
+		  data: dataObj,
+		  xkey: 'period',
+		  ykeys: ['negative', 'neutral','positive'],
+		  labels: ['negative', 'neutral','positive'],
+		  lineColors: ['red','orange' ,'green'],
+		  parseTime: false
+	});
+}
+
+function requestCharts(){
+	window.location.href = contextpath + "/charts";
+}
+function requestHome(){
+	window.location.href = contextpath + "/";
 }

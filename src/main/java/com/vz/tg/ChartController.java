@@ -1,18 +1,23 @@
 package com.vz.tg;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.response.Group;
-import org.apache.solr.client.solrj.response.GroupCommand;
+import org.apache.solr.client.solrj.response.FacetField;
+import org.apache.solr.client.solrj.response.PivotField;
+import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
+import org.apache.solr.common.util.NamedList;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.vz.tg.model.ChartBean;
 import com.vz.tg.model.HomeBean;
 import com.vz.tg.services.HomeService;
 
@@ -45,61 +51,136 @@ public class ChartController {
 		
 		logger.info("Welcome Charts! The client locale is {}.", locale);
 		
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-		
-		String formattedDate = dateFormat.format(date);
-		
-		model.addAttribute("serverTime", formattedDate );
 		//model = new object.. set values and set to MAV..
 		
 		SolrQuery query = new SolrQuery("id:*");
-		query.set("group", true);
-		query.set("group.field", "sentimentScore");
-		query.addSort("sentimentScore",SolrQuery.ORDER.asc);
-		HomeBean bean = new HomeBean();
+		query.set("facet", true);
+		query.addFacetField("tweet_category");
+		query.addSort("tweet_category",SolrQuery.ORDER.asc);
+		query.setRows(0);
+		ChartBean bean = new ChartBean();
 		try{
 			QueryResponse response = homeservice.getServiceResponse(query);
+			Collection<JSONObject> productsList = new ArrayList<JSONObject>();
+			Collection<JSONObject> tabletsAndSmartPhones = new ArrayList<JSONObject>();
 			if(response!=null){
-				 /*SolrDocumentList responseList = response.getResults();
-				 long totalCount = responseList.getNumFound();
-				 if(totalCount>0){
-					 bean.setResultCount(totalCount);
-				 }*/
-				 List<GroupCommand> list = response.getGroupResponse().getValues();
-				 GroupCommand groupList = list.get(0);
-				 long totalCount = groupList.getMatches();
-				 bean.setResultCount(totalCount);
-				 List<Group> groups = groupList.getValues();
-				 
-				 long positivaTotal =0;
-				 if(groups!=null && groups.size()>0){
-					 for(Group grp:groups){
-						 String grpValue = grp.getGroupValue();
-						 SolrDocumentList docList = grp.getResult();
-						 long numFound = docList.getNumFound();
-						 if(grpValue!=null){
-							 int sentiment_val =  Integer.parseInt(grpValue);
-							 switch(sentiment_val){
-							 	case 0://Negative Needs immediate Attention....
-							 		bean.setNegativeCount(numFound);
-							 		break;
-							 	case 2:
-							 		bean.setNeutralCount(numFound);
-							 		break;
-							 	case 3:
-							 		positivaTotal = positivaTotal+numFound;
-							 		break;
-							 	case 4:
-							 		positivaTotal = positivaTotal+numFound;
-							 		break;
-							 }
-						 }
-					 }
-				 }
-				 bean.setPositiveCount(positivaTotal);
+				FacetField categoryFacet = response.getFacetField("tweet_category");
+				List<Count> list =categoryFacet.getValues();
+				Iterator itr =list.iterator();
+				Collection<String> productKeys = new ArrayList<String>();
+				Collection<String> smartPhoneKeys = new ArrayList<String>();
+				while(itr.hasNext()){
+					Count categoryObj = (Count)itr.next();
+					if(categoryObj!=null){
+						String categoryName = categoryObj.getName();
+						if((categoryName.contains("Products") || categoryName.contains("Product")) && categoryName.contains("_")){
+							//System.out.println(categoryName.split("_")[2]);
+							String subCatName = categoryName.split("_")[2];
+							JSONObject tempJSON = new JSONObject();
+							if(!productKeys.contains(subCatName)){
+								productKeys.add(subCatName);
+								tempJSON.put("label", subCatName);
+								tempJSON.put("data", categoryObj.getCount());
+								productsList.add(tempJSON);
+							}
+							
+						}else if((categoryName.contains("Smartphones") || categoryName.contains("Tablets")) && categoryName.contains("_")){
+							String subCatName = categoryName.split("_")[2];
+							JSONObject tempJSON = new JSONObject();
+							if(!smartPhoneKeys.contains(subCatName)){
+								smartPhoneKeys.add(subCatName);
+								tempJSON.put("label", subCatName);
+								tempJSON.put("data", categoryObj.getCount());
+								tabletsAndSmartPhones.add(tempJSON);
+							}
+						}
+					}
+				}
 			}
-		
+			JSONObject productsJSON = new JSONObject();
+			productsJSON.put("productList", productsList);
+			JSONObject smartPhoneJSON = new JSONObject();
+			smartPhoneJSON.put("phonesAndTablets", tabletsAndSmartPhones);
+			bean.setProductsJSON(productsJSON);
+			bean.setSmartphoneAndTablets(smartPhoneJSON);
+			
+			
+			query.addFacetPivotField("tweetPostedTime,sentimentScore");
+			query.addSort("tweetPostedTime",SolrQuery.ORDER.asc);
+			query.setRows(0);
+			DateFormat dateFormat1 = new SimpleDateFormat ("E MMM d hh:mm:ss zzz yyyy");
+			SimpleDateFormat newFormat = new SimpleDateFormat("MM-dd-yyyy");
+			Collection<JSONObject> sentimentObjList = new ArrayList<JSONObject>();
+			JSONObject tempObj = new JSONObject();
+			JSONObject finalObj = new JSONObject();
+			response = homeservice.getServiceResponse(query);
+			List<Date> myList = new ArrayList<Date>();
+			if(response!=null){
+				System.out.println(response);
+				NamedList<List<PivotField>> pivotNamedList = response.getFacetPivot();
+				System.out.println(pivotNamedList.size());
+				for( int i=0;i<pivotNamedList.size();i++){
+					List<PivotField> pvotList = pivotNamedList.getVal(i);
+					for(PivotField pf:pvotList){
+						if(pf!=null){
+							System.out.println(pf.getValue());
+							Date beforeParse = dateFormat1.parse(pf.getValue().toString());
+							myList.add(beforeParse);
+							JSONObject sentimentObj = new JSONObject();
+							
+							sentimentObj.put("period", newFormat.format(beforeParse));
+							//System.out.println(pf.getField());
+							List<PivotField> sentimentList = pf.getPivot();
+							int negativeTotal =0;
+							int neutralTotal =0;
+							int positiveTotal =0;
+							for(PivotField sentimentpivot:sentimentList){
+								
+								if(sentimentpivot!=null){
+									if(sentimentpivot.getValue()!=null){
+										int fullCatName = (Integer)sentimentpivot.getValue();
+										if(fullCatName ==0){
+											negativeTotal = negativeTotal + sentimentpivot.getCount();
+										}else if(fullCatName == 1 || fullCatName ==2 ){
+											neutralTotal = neutralTotal + sentimentpivot.getCount();
+										}else if(fullCatName ==3 || fullCatName==4){
+											positiveTotal = positiveTotal + sentimentpivot.getCount();
+										}
+									}
+									
+								}
+								
+								
+							//	System.out.println(sentimentObj);
+								
+								
+							}
+							sentimentObj.put("negative", negativeTotal);
+							sentimentObj.put("positive", positiveTotal);
+							sentimentObj.put("neutral", neutralTotal);
+							tempObj.put(newFormat.format(beforeParse), sentimentObj);
+							//sentimentObjList.add(sentimentObj);
+						}
+						
+					}
+					
+				}
+				//finalObj.put("categoryData", categoryLst);
+			}
+			Collections.sort(myList);
+			Iterator<Date> itr = myList.iterator();
+			while(itr.hasNext()){
+				
+				Date inputDate = dateFormat1.parse(itr.next().toString());
+				
+				String tempKey = newFormat.format(inputDate);
+				System.out.println(tempKey);
+				JSONObject newObj = (JSONObject)tempObj.get(tempKey);
+				sentimentObjList.add(newObj);
+				
+			}
+			finalObj.put("sentimentData", sentimentObjList);
+			bean.setSentimentDataObject(finalObj);
 		}catch(Exception e){
 			e.printStackTrace();
 		}

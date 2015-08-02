@@ -1,3 +1,4 @@
+<%@page import="com.vz.tg.model.ChartBean"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="false" %>
 <!DOCTYPE html>
@@ -51,7 +52,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/tg/">Twitter Data Analysis</a>
+                <a class="navbar-brand" href="#" onclick="requestHome();">Twitter Data Analysis</a>
             </div>
             <ul class="nav navbar-right top-nav">
             	<li class="message-preview">
@@ -167,10 +168,10 @@
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
                     <li>
-                        <a href="/tg/"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                        <a href="#" onclick="requestHome();"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
                     </li>
                     <li class="active">
-                        <a href="/tg/charts"><i class="fa fa-fw fa-bar-chart-o"></i> Charts</a>
+                        <a href="#" onclick="requestCharts();"><i class="fa fa-fw fa-bar-chart-o"></i> Charts</a>
                     </li>
                     <!-- 
                     <li>
@@ -240,11 +241,11 @@
                     <div class="col-lg-12">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-bar-chart-o fa-fw"></i> Line Chart Example</h3>
+                                <h3 class="panel-title"><i class="fa fa-bar-chart-o fa-fw"></i> Sentiment Chart</h3>
                             </div>
                             <div class="panel-body">
 	                            <div class="flot-chart">
-	                                <div class="flot-chart-content" id="flot-line-chart"></div>
+	                                <div class="flot-chart-content" id="flot-line-chart-tg"></div>
 	                            </div>
 	                        </div>
                         </div>
@@ -256,11 +257,11 @@
                     <div class="col-lg-6">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i> Pie Chart Example</h3>
+                                <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i>Products</h3>
                             </div>
                             <div class="panel-body">
 	                              <div class="flot-chart">
-	                                <div class="flot-chart-content" id="flot-pie-chart"></div>
+	                                <div class="flot-chart-content" id="flot-pie-chart-tg"></div>
 	                            </div>
                             </div>
                         </div>
@@ -269,12 +270,12 @@
                     <div class="col-lg-6">
                     	<div class="panel panel-default">
 	                        <div class="panel-heading">
-	                            Multiple Axes Line Chart Example
+	                            <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i>Smartphones and Tablets</h3>
 	                        </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="flot-chart">
-                                <div class="flot-chart-content" id="flot-line-chart-multi"></div>
+                                <div class="flot-chart-content" id="flot-pie-chart-tg-sm"></div>
                             </div>
                         </div>
                         <!-- /.panel-body -->
@@ -354,12 +355,26 @@
     <script src="<%= request.getContextPath() %>/resources/js/plugins/flot/jquery.flot.time.js"></script>
     <script src="<%= request.getContextPath() %>/resources/js/plugins/flot/jquery.flot.tooltip.min.js"></script>
     <script src="<%= request.getContextPath() %>/resources/js/plugins/flot/flot-data.js"></script>    
-    
-    <script src="<%= request.getContextPath() %>/resources/js/app/homepage.js"></script>
+    <script src="<%= request.getContextPath() %>/resources/js/plugins/morris/raphael.min.js"></script>
+    <script src="<%= request.getContextPath() %>/resources/js/plugins/morris/morris.min.js"></script>
+    <script src="<%= request.getContextPath() %>/resources/js/plugins/morris/morris-data.js"></script>
+    <script src="<%= request.getContextPath() %>/resources/js/app/common.js"></script>
 
 </body>
 
 </html>
 <style>
 .navbar-right{margin-top:20px;color:white !important;}
+#flot-pie-chart-tg{min-height: 250px;}
 </style>
+<script type="text/javascript">
+<% ChartBean charts = (ChartBean)request.getAttribute("model"); %>
+var productsList = <%= charts.getProductsJSON()%>;
+var smartPhoneList = <%= charts.getSmartphoneAndTablets()%>;
+var sentimentList = <%= charts.getSentimentDataObject()%>;
+
+
+generatePieChartProduct(productsList);
+generatepieChartSmartPh(smartPhoneList);
+generateLineChart(sentimentList);
+</script>

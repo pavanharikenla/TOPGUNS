@@ -52,7 +52,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Twitter Data Analysis</a>
+                <a class="navbar-brand" href="#" onclick="requestHome();">Twitter Data Analysis</a>
             </div>
             <ul class="nav navbar-right top-nav">
             	<li class="message-preview">
@@ -168,10 +168,10 @@
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
                     <li class="active">
-                        <a href="#"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                        <a href="#" onclick="requestHome();"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
                     </li>
                     <li>
-                        <a href="charts.html"><i class="fa fa-fw fa-bar-chart-o"></i> Charts</a>
+                        <a href="#" onclick="requestCharts();"><i class="fa fa-fw fa-bar-chart-o"></i> Charts</a>
                     </li>
                     <!-- 
                     <li>
