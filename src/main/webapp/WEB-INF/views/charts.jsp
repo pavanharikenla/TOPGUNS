@@ -1,4 +1,3 @@
-<%@page import="com.vz.tg.model.HomeBean"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="false" %>
 <!DOCTYPE html>
@@ -52,7 +51,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Twitter Data Analysis</a>
+                <a class="navbar-brand" href="/tg/">Twitter Data Analysis</a>
             </div>
             <ul class="nav navbar-right top-nav">
             	<li class="message-preview">
@@ -167,11 +166,11 @@
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
-                    <li class="active">
-                        <a href="#"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
-                    </li>
                     <li>
-                        <a href="charts.html"><i class="fa fa-fw fa-bar-chart-o"></i> Charts</a>
+                        <a href="/tg/"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <a href="/tg/charts"><i class="fa fa-fw fa-bar-chart-o"></i> Charts</a>
                     </li>
                     <!-- 
                     <li>
@@ -208,7 +207,7 @@
             <!-- /.navbar-collapse -->
         </nav>
 
-        <div id="page-wrapper" ng-controller = "homecontroller">
+        <div id="page-wrapper">
 
             <div class="container-fluid">
 
@@ -216,11 +215,11 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            Dashboard <small>Statistics Overview</small>
+                            Charts <small>Statistics Overview</small>
                         </h1>
                         <ol class="breadcrumb">
                             <li class="active">
-                                <i class="fa fa-dashboard"></i> Dashboard
+                                <i class="fa fa-dashboard"></i> Charts
                             </li>
                         </ol>
                     </div>
@@ -238,124 +237,48 @@
                 <!-- /.row -->
 
                 <div class="row">
-                    <div class="col-lg-3 col-md-6">
-                        <div class="panel panel-primary">
-                            <div class="panel-heading">
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        <i class="fa fa-comments fa-5x"></i>
-                                    </div>
-                                    <div class="col-xs-9 text-right">
-                                        <div class="huge">${model.resultCount}</div>
-                                        <div>Tweet Count</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <a href="#" ng-click="data.doClick(item,$event)" id="generalSentiment">
-                                <div class="panel-footer">
-                                    <span class="pull-left">View Details</span>
-                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6">
-                        <div class="panel panel-green">
-                            <div class="panel-heading">
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        <i class="fa fa-tasks fa-5x"></i>
-                                    </div>
-                                    <div class="col-xs-9 text-right">
-                                        <div class="huge">${model.positiveCount}</div>
-                                        <div>Positive Count</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <a href="#" ng-click="data.doClick(item,$event)" id="positiveSentiment">
-                                <div class="panel-footer">
-                                    <span class="pull-left">View Details</span>
-                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6">
-                        <div class="panel panel-yellow">
-                            <div class="panel-heading">
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        <i class="fa fa-tasks fa-5x"></i>
-                                    </div>
-                                    <div class="col-xs-9 text-right">
-                                        <div class="huge">${model.neutralCount}</div>
-                                        <div>Neutral Count</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <a href="#" ng-click="data.doClick(item,$event)" id="neutralSentiment">
-                                <div class="panel-footer">
-                                    <span class="pull-left">View Details</span>
-                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6">
-                        <div class="panel panel-red">
-                            <div class="panel-heading">
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        <i class="fa fa-support fa-5x"></i>
-                                    </div>
-                                    <div class="col-xs-9 text-right">
-                                        <div class="huge">${model.negativeCount}</div>
-                                        <div>Negative Count</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <a href="#" ng-click="data.doClick(item,$event)" id="negativeSentiment">
-                                <div class="panel-footer">
-                                    <span class="pull-left">View Details</span>
-                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.row -->
-
-                <div class="row">
                     <div class="col-lg-12">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-bar-chart-o fa-fw"></i> Category Chart</h3>
+                                <h3 class="panel-title"><i class="fa fa-bar-chart-o fa-fw"></i> Line Chart Example</h3>
                             </div>
                             <div class="panel-body">
-                                <div id="morris-area-chart-tg"></div>
-                            </div>
+	                            <div class="flot-chart">
+	                                <div class="flot-chart-content" id="flot-line-chart"></div>
+	                            </div>
+	                        </div>
                         </div>
                     </div>
                 </div>
                 <!-- /.row -->
 
                 <div class="row">
-                    <div class="col-lg-4">
+                    <div class="col-lg-6">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i> Customer Chart</h3>
+                                <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i> Pie Chart Example</h3>
                             </div>
                             <div class="panel-body">
-                                <div id="morris-donut-chart-tg"></div>
-                                <!-- <div class="text-right">
-                                    <a href="#">View Details <i class="fa fa-arrow-circle-right"></i></a>
-                                </div> -->
+	                              <div class="flot-chart">
+	                                <div class="flot-chart-content" id="flot-pie-chart"></div>
+	                            </div>
                             </div>
                         </div>
+                    </div>
+                    
+                    <div class="col-lg-6">
+                    	<div class="panel panel-default">
+	                        <div class="panel-heading">
+	                            Multiple Axes Line Chart Example
+	                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="flot-chart">
+                                <div class="flot-chart-content" id="flot-line-chart-multi"></div>
+                            </div>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
                     </div>
                     <!-- 
                     <div class="col-lg-4">
@@ -404,38 +327,7 @@
                             </div>
                         </div>
                     </div> -->
-                    <div class="col-lg-8">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-money fa-fw"></i> Tweet List</h3>
-                            </div>
-                            <div class="panel-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-hover table-striped" id="tweetTable">
-                                        <thead>
-                                            <tr>
-                                                <th>Tweets</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <c:forEach var="tweet" items="${model.tweetList}" varStatus="i">
-                                            	<tr><td>${tweet.value}</td></tr>
-                                            </c:forEach>
-                                        </tbody>
-                                    </table>
-                                    <input type="hidden" id="endRecord" value="${model.endRecord}"/>
-                                </div>
-                                <div class="text-right" id="navigationDiv">
-                                	<div><span id="processNextPrev"></span></div>
-                                	<div>
-                                	<a ng-click="data.doClick(item,$event);" id="prevNav" style="display: none;"><i class="fa fa-arrow-circle-left"></i> Prev</a>&nbsp;&nbsp;
-                                    <a ng-click="data.doClick(item,$event);" id="nextNav">Next <i class="fa fa-arrow-circle-right"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                 </div>
                 <!-- /.row -->
 
             </div>
@@ -453,12 +345,17 @@
     <!-- Bootstrap Core JavaScript -->
     <script src="<%= request.getContextPath() %>/resources/js/bootstrap.min.js"></script>
 
-    <!-- Morris Charts JavaScript -->
-    <script src="<%= request.getContextPath() %>/resources/js/plugins/morris/raphael.min.js"></script>
-    <script src="<%= request.getContextPath() %>/resources/js/plugins/morris/morris.min.js"></script>
-    <script src="<%= request.getContextPath() %>/resources/js/plugins/morris/morris-data.js"></script>
+    
+    
+    <script src="<%= request.getContextPath() %>/resources/js/plugins/flot/excanvas.min.js"></script>
+    <script src="<%= request.getContextPath() %>/resources/js/plugins/flot/jquery.flot.js"></script>
+    <script src="<%= request.getContextPath() %>/resources/js/plugins/flot/jquery.flot.pie.js"></script>
+    <script src="<%= request.getContextPath() %>/resources/js/plugins/flot/jquery.flot.resize.js"></script>
+    <script src="<%= request.getContextPath() %>/resources/js/plugins/flot/jquery.flot.time.js"></script>
+    <script src="<%= request.getContextPath() %>/resources/js/plugins/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="<%= request.getContextPath() %>/resources/js/plugins/flot/flot-data.js"></script>    
+    
     <script src="<%= request.getContextPath() %>/resources/js/app/homepage.js"></script>
-    <script src="<%= request.getContextPath() %>/resources/js/app/common.js"></script>
 
 </body>
 
@@ -466,10 +363,3 @@
 <style>
 .navbar-right{margin-top:20px;color:white !important;}
 </style>
-<script type="text/javascript">
-<% HomeBean home = (HomeBean)request.getAttribute("model"); %>
-var ageGroupList = <%= home.getAgeGroup()%>;
-var categoryData = <%= home.getCategoryData()%>
-generateDonut(ageGroupList);
-generateAreaChart(categoryData);
-</script>
