@@ -173,6 +173,9 @@
                     <li>
                         <a href="#" onclick="requestCharts();"><i class="fa fa-fw fa-bar-chart-o"></i> Charts</a>
                     </li>
+                    <li>
+                    	<a href="#" onclick="requestSearch();"><i class="fa fa-fw fa-search"></i> Search</a>
+                    </li>
                     <!-- 
                     <li>
                         <a href="tables.html"><i class="fa fa-fw fa-table"></i> Tables</a>

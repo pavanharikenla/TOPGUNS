@@ -188,27 +188,35 @@ public class ChartController {
 		logger.info("bye now");
 		return mav;
 	}
-	@RequestMapping(value = "/tweetresponse1", method = RequestMethod.GET)
+	@RequestMapping(value = "/search", method = RequestMethod.GET)
+	public ModelAndView search(Locale locale, Model model) {
+		
+		logger.info("Welcome Charts! The client locale is {}.", locale);
+		
+		
+		ModelAndView mav = new ModelAndView("search", "model", "");
+		logger.info("bye now");
+		return mav;
+	}
+	@RequestMapping(value = "/searchtweetresponse", method = RequestMethod.GET)
 	@ResponseBody
 	
-	public String getTweets(@RequestParam("type") String type,@RequestParam("start") int start,@RequestParam("end") int end) {
+	public String getTweets(@RequestParam("search") String searchKey,@RequestParam("start") int start,@RequestParam("end") int end) {
 		
 		logger.info("Welcome to Tweets");
 		JSONObject finalObject = new JSONObject();
 		
 		int startRow =0;
 		int endRow=10;
-		String tweetType="*";
-		if(type!=null && !type.equalsIgnoreCase("general")){
-			tweetType = type;
-		}
+		//String tweetType="*";
+		
 		if(start>startRow){
 			startRow =start;
 		}
 		if(end>endRow){
 			endRow=end;
 		}
-		SolrQuery query = new SolrQuery("sentiment:"+tweetType);
+		SolrQuery query = new SolrQuery("tweet_content:*"+searchKey+"*");
 		query.setStart(startRow);
 		query.setRows(endRow);
 		HomeBean bean = new HomeBean();
@@ -221,7 +229,7 @@ public class ChartController {
 			 if(totalCount>0){
 				 bean.setResultCount(totalCount);
 			 }
-			  
+			 finalObject.put("total", totalCount); 
 			 for(SolrDocument document:responseList){
 				 JSONObject json = new JSONObject();
 				 json.put("id", document.getFieldValue("id"));

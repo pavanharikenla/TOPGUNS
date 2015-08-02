@@ -107,3 +107,6 @@ function requestCharts(){
 function requestHome(){
 	window.location.href = contextpath + "/";
 }
+function requestSearch(){
+	window.location.href = contextpath + "/search";
+}
