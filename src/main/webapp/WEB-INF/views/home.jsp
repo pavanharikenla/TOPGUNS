@@ -471,6 +471,9 @@
 .navbar-right{margin-top:20px;color:white !important;}
 #prevNav{cursor: pointer;}
 #nextNav{cursor: pointer;}
+.huge {
+    font-size: 30px!important;
+}
 </style>
 <script type="text/javascript">
 <% HomeBean home = (HomeBean)request.getAttribute("model"); %>
