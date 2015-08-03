@@ -1,5 +1,6 @@
 <%@page import="com.vz.tg.model.HomeBean"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page session="false" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -249,12 +250,12 @@
                                         <i class="fa fa-comments fa-5x"></i>
                                     </div>
                                     <div class="col-xs-9 text-right">
-                                        <div class="huge">${model.resultCount}</div>
+                                        <div class="huge"><fmt:formatNumber type="number" value="${model.resultCount}" /> </div>
                                         <div>Tweet Count</div>
                                     </div>
                                 </div>
                             </div>
-                            <a href="#" ng-click="data.doClick(item,$event)" id="generalSentiment">
+                            <a href="" ng-click="data.doClick(item,$event)" id="generalSentiment">
                                 <div class="panel-footer">
                                     <span class="pull-left">View Details</span>
                                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -271,12 +272,12 @@
                                         <i class="fa fa-tasks fa-5x"></i>
                                     </div>
                                     <div class="col-xs-9 text-right">
-                                        <div class="huge">${model.positiveCount}</div>
+                                        <div class="huge"><fmt:formatNumber type="number" value="${model.positiveCount}" /> </div>
                                         <div>Positive Count</div>
                                     </div>
                                 </div>
                             </div>
-                            <a href="#" ng-click="data.doClick(item,$event)" id="positiveSentiment">
+                            <a href="" ng-click="data.doClick(item,$event)" id="positiveSentiment">
                                 <div class="panel-footer">
                                     <span class="pull-left">View Details</span>
                                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -293,12 +294,12 @@
                                         <i class="fa fa-tasks fa-5x"></i>
                                     </div>
                                     <div class="col-xs-9 text-right">
-                                        <div class="huge">${model.neutralCount}</div>
+                                        <div class="huge"><fmt:formatNumber type="number" value="${model.neutralCount}" /> </div>
                                         <div>Neutral Count</div>
                                     </div>
                                 </div>
                             </div>
-                            <a href="#" ng-click="data.doClick(item,$event)" id="neutralSentiment">
+                            <a href="" ng-click="data.doClick(item,$event)" id="neutralSentiment">
                                 <div class="panel-footer">
                                     <span class="pull-left">View Details</span>
                                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -315,12 +316,12 @@
                                         <i class="fa fa-support fa-5x"></i>
                                     </div>
                                     <div class="col-xs-9 text-right">
-                                        <div class="huge">${model.negativeCount}</div>
+                                        <div class="huge"><fmt:formatNumber type="number" value="${model.negativeCount}" /></div>
                                         <div>Negative Count</div>
                                     </div>
                                 </div>
                             </div>
-                            <a href="#" ng-click="data.doClick(item,$event)" id="negativeSentiment">
+                            <a href="" ng-click="data.doClick(item,$event)" id="negativeSentiment">
                                 <div class="panel-footer">
                                     <span class="pull-left">View Details</span>
                                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -468,6 +469,8 @@
 </html>
 <style>
 .navbar-right{margin-top:20px;color:white !important;}
+#prevNav{cursor: pointer;}
+#nextNav{cursor: pointer;}
 </style>
 <script type="text/javascript">
 <% HomeBean home = (HomeBean)request.getAttribute("model"); %>

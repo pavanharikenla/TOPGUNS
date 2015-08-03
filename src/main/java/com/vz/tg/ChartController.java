@@ -12,8 +12,8 @@ import java.util.Locale;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.FacetField;
-import org.apache.solr.client.solrj.response.PivotField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
+import org.apache.solr.client.solrj.response.PivotField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
@@ -149,23 +149,16 @@ public class ChartController {
 									}
 									
 								}
-								
-								
-							//	System.out.println(sentimentObj);
-								
-								
 							}
 							sentimentObj.put("negative", negativeTotal);
 							sentimentObj.put("positive", positiveTotal);
 							sentimentObj.put("neutral", neutralTotal);
 							tempObj.put(newFormat.format(beforeParse), sentimentObj);
-							//sentimentObjList.add(sentimentObj);
 						}
 						
 					}
 					
 				}
-				//finalObj.put("categoryData", categoryLst);
 			}
 			Collections.sort(myList);
 			Iterator<Date> itr = myList.iterator();
@@ -191,7 +184,7 @@ public class ChartController {
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public ModelAndView search(Locale locale, Model model) {
 		
-		logger.info("Welcome Charts! The client locale is {}.", locale);
+		logger.info("Welcome Search! The client locale is {}.", locale);
 		
 		
 		ModelAndView mav = new ModelAndView("search", "model", "");
@@ -242,6 +235,59 @@ public class ChartController {
 		}
 		
 		finalObject.put("tweetList", objectList);
+		
+		query.set("facet", true);
+		query.addFacetField("tweetPostedTime");
+		query.addSort("tweetPostedTime",SolrQuery.ORDER.asc);
+		query.setRows(0);
+		QueryResponse response = homeservice.getServiceResponse(query);
+		//2015-07-30T12:10:31Z
+		DateFormat dateFormat1 = new SimpleDateFormat ("yyyy-MM-dd");
+		SimpleDateFormat newFormat = new SimpleDateFormat("MM-dd-yyyy");
+		DateFormat dateFormat2 = new SimpleDateFormat ("E MMM d hh:mm:ss zzz yyyy");
+		List<Date> myList = new ArrayList<Date>();
+		//Collection<JSONObject> tempList = new ArrayList<JSONObject>();
+		Collection<JSONObject> dateCountList = new ArrayList<JSONObject>();
+		JSONObject tempObj = new JSONObject();
+		try{
+			if(response!=null){
+				FacetField timeFacet = response.getFacetField("tweetPostedTime");
+				List<Count> list =timeFacet.getValues();
+				Iterator itr =list.iterator();
+				//Collection<String> productKeys = new ArrayList<String>();
+				//Collection<String> smartPhoneKeys = new ArrayList<String>();
+				while(itr.hasNext()){
+					Count timeObj = (Count)itr.next();
+					if(timeObj!=null){
+						String timeName = timeObj.getName();
+						String originalTime = timeName.split("T")[0];
+						Date beforeParse = dateFormat1.parse(originalTime);
+						myList.add(beforeParse);
+						JSONObject timeObject = new JSONObject();
+						timeObject.put("date", newFormat.format(beforeParse));
+						timeObject.put("count", timeObj.getCount());
+						//tempList.add(timeObject);
+						tempObj.put(newFormat.format(beforeParse), timeObject);
+					}
+				}
+			}
+			Collections.sort(myList);
+			Iterator<Date> itr = myList.iterator();
+			while(itr.hasNext()){
+				
+				Date inputDate = dateFormat2.parse(itr.next().toString());
+				
+				String tempKey = newFormat.format(inputDate);
+				System.out.println(tempKey);
+				JSONObject newObj = (JSONObject)tempObj.get(tempKey);
+				dateCountList.add(newObj);
+			}
+			finalObject.put("dateList", dateCountList);
+			
+		}catch(Exception e){
+			logger.error(e.getMessage());
+			e.printStackTrace();
+		}
 		logger.info("bye Tweets");
 		return finalObject.toString();
 	}

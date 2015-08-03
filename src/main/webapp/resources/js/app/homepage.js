@@ -7,6 +7,7 @@ var app= angular.module('topguns',[]);
 app.controller('homecontroller', function($scope,$http) {
     	$scope.data = [];
     	$scope.data.doClick = function(item,event){
+    		$('#tweetTable').focus();
     		$("#processNextPrev").append("<img id='processing' src='"+contextpath+"/resources/images/process.gif' height='50' width='50'/>");
     		var clickedId = event.currentTarget.id;
     		//alert(clickedId);

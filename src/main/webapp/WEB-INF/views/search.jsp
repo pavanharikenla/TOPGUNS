@@ -125,8 +125,35 @@
                 </div>
                 <!-- /.row -->
 
-                
-
+                <div class="row" style="display:none;" id="graphHolder">
+                    <div class="col-lg-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i>Results By Date</h3>
+                            </div>
+                            <div class="panel-body">
+	                              <div class="flot-chart">
+	                                <div class="flot-chart-content" id="morris-bar-chart-tg"></div>
+	                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-6" style="display:none;">
+                    	<div class="panel panel-default">
+	                        <div class="panel-heading">
+	                            <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i>Smartphones and Tablets</h3>
+	                        </div>
+	                        <!-- /.panel-heading -->
+	                        <div class="panel-body">
+	                            <div class="flot-chart">
+	                                <div class="flot-chart-content" id="flot-pie-chart-tg-sm"></div>
+	                            </div>
+	                        </div>
+	                        <!-- /.panel-body -->
+                    	</div>
+                    </div>
+				</div>
                 
 
                 
@@ -135,7 +162,7 @@
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-money fa-fw"></i> Tweet List</h3>
                             </div>
-                            <div class="panel-body">
+                            <div class="panel-body" id="panel-body-id">
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-hover table-striped" id="tweetTable">
                                         <thead>
@@ -151,14 +178,15 @@
                                     </table>
                                     <%-- <input type="hidden" id="endRecord" value="${model.endRecord}"/> --%>
                                 </div>
-                                <div class="text-right" id="navigationDiv">
+                                <!-- <div class="text-right" id="navigationDiv">
                                 	<div><span id="processNextPrev"></span></div>
                                 	<div>
                                 	<a ng-click="data.doClick(item,$event);" id="prevNav" style="display: none;"><i class="fa fa-arrow-circle-left"></i> Prev</a>&nbsp;&nbsp;
                                     <a ng-click="data.doClick(item,$event);" id="nextNav">Next <i class="fa fa-arrow-circle-right"></i></a>
-                                    </div>
+                                    </div>-->
                                 </div>
                             </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -180,9 +208,16 @@
     <script src="<%= request.getContextPath() %>/resources/js/bootstrap.min.js"></script>
 
     <!-- Morris Charts JavaScript -->
+    <script src="<%= request.getContextPath() %>/resources/js/plugins/flot/excanvas.min.js"></script>
+    <script src="<%= request.getContextPath() %>/resources/js/plugins/flot/jquery.flot.js"></script>
+    <script src="<%= request.getContextPath() %>/resources/js/plugins/flot/jquery.flot.pie.js"></script>
+    <script src="<%= request.getContextPath() %>/resources/js/plugins/flot/jquery.flot.resize.js"></script>
+    <script src="<%= request.getContextPath() %>/resources/js/plugins/flot/jquery.flot.time.js"></script>
+    <script src="<%= request.getContextPath() %>/resources/js/plugins/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="<%= request.getContextPath() %>/resources/js/plugins/flot/flot-data.js"></script>    
     <script src="<%= request.getContextPath() %>/resources/js/plugins/morris/raphael.min.js"></script>
     <script src="<%= request.getContextPath() %>/resources/js/plugins/morris/morris.min.js"></script>
-    <script src="<%= request.getContextPath() %>/resources/js/plugins/morris/morris-data.js"></script>
+    
     <script src="<%= request.getContextPath() %>/resources/js/app/search.js"></script>
     <script src="<%= request.getContextPath() %>/resources/js/app/common.js"></script>
 
@@ -193,4 +228,7 @@
 .navbar-right{margin-top:20px;color:white !important;}
 #tweetTableBase{padding:0px!important;margin-top:10px;}
 div.input-group{margin-bottom:20px;}
+#prevNav{cursor: pointer;}
+#nextNav{cursor: pointer;}
 </style>
+

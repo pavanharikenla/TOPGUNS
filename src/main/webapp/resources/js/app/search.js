@@ -6,16 +6,20 @@ var startNum= 0;
 var sentimentTypeGlobal = "";
 var app= angular.module('topguns',[]);
 
-app.controller('searchcontroller', function($scope,$http) {
+app.controller('searchcontroller', function($scope,$http,$compile) {
     	$scope.data = [];
     	$scope.data.doClick = function(item,event){
-    		if (event.which === 13){
-    		    //alert('I am an alert');//proceed further nothing to do... :-)
-    		}else{
-    			return;
-    		}
-    		$("#processNextPrev").append("<img id='processing' src='"+contextpath+"/resources/images/process.gif' height='50' width='50'/>");
     		var clickedId = event.currentTarget.id;
+    		if(clickedId == 'searchKey'){
+    			if (event.which === 13){
+        		    //alert('I am an alert');//proceed further nothing to do... :-)
+        		}else{
+        			return;
+        		}
+    		}
+    		
+    		$("#processNextPrev").append("<img id='processing' src='"+contextpath+"/resources/images/process.gif' height='50' width='50'/>");
+    		
     		var searchKey = $('#searchKey').val();
     		if(searchKey == ""){
     			alert('Please enter a valid search string.');
@@ -24,6 +28,7 @@ app.controller('searchcontroller', function($scope,$http) {
     		//alert(clickedId);
     		var sentimentType ="";
     		if(clickedId == 'searchId' || clickedId == 'searchKey'){
+    			$('#navigationDiv').remove();
     			$("#processSearch").append("<img id='processing' src='"+contextpath+"/resources/images/process.gif' height='50' width='50'/>");
     			$('#alertDiv').css("display","none");
     			$('#tableHolder').css("display","none");
@@ -59,9 +64,29 @@ app.controller('searchcontroller', function($scope,$http) {
     	    	 $("#processSearch").empty();
     	    	 
     	    	 $("#processNextPrev").empty();
+    	    	 //alert(JSON.stringify(data))
     	    	 if(data.total>0){
     	    		 $('#tableHolder').css("display","");
+    	    		var navigation ="<div class='text-right' id='navigationDiv'>"+
+                                	"<div><span id='processNextPrev'></span></div>"+
+                                	"<div><a ng-click='data.doClick(item,$event);' id='prevNav' style='display: none;'><i class='fa fa-arrow-circle-left'></i> Prev</a>&nbsp;&nbsp;"+
+                                    "<a ng-click='data.doClick(item,$event);' id='nextNav'>Next <i class='fa fa-arrow-circle-right'></i></a>"+
+                                    "</div></div>";
+    	    		 
+    	    		 
+    	    		 
 	    	    	 if(clickedId == 'searchId' || clickedId == 'searchKey'){
+	    	    		 var dateObject = data.dateList;
+	    	    	     //alert(JSON.stringify(dateObject));
+	    	    		 $('#graphHolder').css('display','');
+	    	    		 
+	    	    		 generateBarChart(dateObject); 
+	    	    		 if(data.total>10){
+	    	    			 var element = angular.element(navigation);
+	    	    			 var cpFn =$compile(element);
+	    	    			 var scopeFn = cpFn($scope);
+	    	    			 $('#panel-body-id').append(scopeFn);
+	    	    		 }
 	    	    		 $('#alertInfo').empty();
 	    	    		 var totalResult = "<span>Search Keyword: <b>"+searchKey+"</b>. Total of <b>"+data.total+ "</b> results found.</span>";
 	    	    		 $('#alertInfo').append(totalResult);
@@ -76,6 +101,8 @@ app.controller('searchcontroller', function($scope,$http) {
     	    	//$('#endRecord').val('');
     	    	
     	    	//alert(startVar);
+    	    	
+    	    	 
     	        var response = data.tweetList;
     	        //alert(response);
     	        var trData = "";
@@ -97,3 +124,20 @@ app.controller('searchcontroller', function($scope,$http) {
     	    });
     	};
 });
+
+function generateBarChart(dateObject){
+	// Bar Chart
+	//alert(JSON.stringify(dateObject));
+	$('#morris-bar-chart-tg').empty();
+    Morris.Bar({
+        element: 'morris-bar-chart-tg',
+        data: dateObject,
+        xkey: 'date',
+        ykeys: ['count'],
+        labels: ['count'],
+        barRatio: 0.4,
+        xLabelAngle: 35,
+        hideHover: 'auto',
+        resize: true
+    });
+}
