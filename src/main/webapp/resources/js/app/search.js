@@ -51,7 +51,7 @@ app.controller('searchcontroller', function($scope,$http,$compile) {
     		//alert(startVar);
     		var responsePromise = $http({
     	        method: 'GET',
-    	        url: contextpath+"/searchtweetresponse?search="+searchKey+"&start="+startVar+"&end=10",
+    	        url: contextpath+"/searchtweetresponse?search="+searchKey+"&start="+startVar+"&end=10&processdata=" + (new Date()).getTime(),
     	        //params: 'limit=10, sort_by=created:desc',
     	        headers: {"Content-Type": "application/json",
     	        			"Content-Type": "application/x-www-form-urlencoded",
@@ -77,10 +77,16 @@ app.controller('searchcontroller', function($scope,$http,$compile) {
     	    		 
 	    	    	 if(clickedId == 'searchId' || clickedId == 'searchKey'){
 	    	    		 var dateObject = data.dateList;
-	    	    	     //alert(JSON.stringify(dateObject));
-	    	    		 $('#graphHolder').css('display','');
-	    	    		 
-	    	    		 generateBarChart(dateObject); 
+	    	    		 //var dateStr = JSON.stringify(dateObject); 
+	    	    		 if(dateObject != undefined){
+		    	    	     //alert(JSON.stringify(dateObject));
+		    	    		 $('#graphHolder').css('display','');
+		    	    		 
+		    	    		 generateBarChart(dateObject); 
+	    	    		 }else{
+	    	    			 //alert('here'+JSON.stringify(dateObject));
+	    	    			 $('#graphHolder').css('display','none');
+	    	    		 }
 	    	    		 if(data.total>10){
 	    	    			 var element = angular.element(navigation);
 	    	    			 var cpFn =$compile(element);
@@ -96,6 +102,7 @@ app.controller('searchcontroller', function($scope,$http,$compile) {
     	    			 $('#alertInfo').empty();
 	    	    		 var totalResult = "<span>No results found for <b>"+searchKey+"</b>.</span>";
 	    	    		 $('#alertInfo').append(totalResult);
+	    	    		 $('#graphHolder').css('display','none');
 	    	    	 }
     	    	 }
     	    	//$('#endRecord').val('');
@@ -119,7 +126,7 @@ app.controller('searchcontroller', function($scope,$http,$compile) {
     	        
     	    });
     	    responsePromise.error(function(data,status,headers,config){
-    	    	alert(status);
+    	    	//alert(status);
     	        alert("Exception returned from Server. Please try later.");
     	    });
     	};
