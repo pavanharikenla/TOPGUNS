@@ -250,7 +250,7 @@
                                         <i class="fa fa-comments fa-5x"></i>
                                     </div>
                                     <div class="col-xs-9 text-right">
-                                        <div class="huge"><fmt:formatNumber type="number" value="${model.resultCount}" /> </div>
+                                        <div class="huge">${model.resultCount} </div>
                                         <div>Tweet Count</div>
                                     </div>
                                 </div>
