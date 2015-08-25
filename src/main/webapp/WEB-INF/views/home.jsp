@@ -272,7 +272,7 @@
                                         <i class="fa fa-tasks fa-5x"></i>
                                     </div>
                                     <div class="col-xs-9 text-right">
-                                        <div class="huge"><fmt:formatNumber type="number" value="${model.positiveCount}" /> </div>
+                                        <div class="huge">${model.positiveCount} </div>
                                         <div>Positive Count</div>
                                     </div>
                                 </div>
